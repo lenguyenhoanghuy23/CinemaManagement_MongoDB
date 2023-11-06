@@ -1,0 +1,116 @@
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col col-md-6">
+                <h5 class="card-title">
+                    {{ '::CinemaZoom' | abpLocalization }}
+                </h5>
+            </div>
+            <div class="text-end col col-md-6"></div>
+            <div class="text-lg-end pt-2">
+                <button *abpPermission="'CinemaManagement.CinemaZooms.Create'" id="create" class="btn btn-primary" type="button" (click)="createCinme()" >
+                    <i class="fa fa-plus me-1"></i>
+                    <span>{{"::NewCinemaZoom" | abpLocalization}}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+            <ngx-datatable [rows]="cinemaZoom.items" [count]="cinemaZoom.totalCount" [list]="list" default>
+                <ngx-datatable-column
+                    [name]="'::Actions' | abpLocalization"
+                    [maxWidth]="150"
+                    [sortable]="false"
+                >
+                <ng-template let-row="row" ngx-datatable-cell-template="">
+                    <div ngbDropdown  container="body" class="d-inline-block">
+                        <button 
+                                class="btn btn-primary btn-sm dropdown-toggle"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                ngbDropdownToggle
+                            >
+                            <i class="fa fa-cog me-1"></i>{{ '::Actions' | abpLocalization }}
+                        </button>
+                        <div ngbDropdownMenu> 
+                            <button *abpPermission="'CinemaManagement.CinemaZooms.Edit'" ngbDropdownItem (click)="editScreenType(row.cinemaCode)">
+                                {{ '::Edit' | abpLocalization }}
+                            </button>
+                            <button *abpPermission="'CinemaManagement.CinemaZooms.Delete'" ngbDropdownItem (click)="delete(row.cinemaCode)">
+                                {{'::delete' | abpLocalization}}
+                            </button>
+                        </div>
+                        
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [name]="'::cinemaCode' | abpLocalization" prop="cinemaCode"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'::cinemaName' | abpLocalization" prop="cinemaName"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'::numberSeat' | abpLocalization" prop="numberSeats"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'::rowSeats' | abpLocalization" prop="rowSeats"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'::columnSeats' | abpLocalization" prop="columnSeats"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'::status' | abpLocalization" prop="status">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    
+                    <div *ngIf="row.status == 0 ; else elseBlock">
+                        <nz-tag [nzColor]="'green'">{{ '::Enum:Status.' + row.status | abpLocalization }}</nz-tag>
+                    </div>
+                    <ng-template #elseBlock> 
+                        <nz-tag [nzColor]="'red'">{{ '::Enum:Status.' + row.status | abpLocalization }}</nz-tag>  
+                    </ng-template>
+                </ng-template>
+            </ngx-datatable-column>
+
+        </ngx-datatable>
+    </div>
+</div>
+
+<!-- Add the modal here -->
+<abp-modal [(visible)]="isModalOpen">
+    <ng-template #abpHeader>
+        <h3>{{ (selectedCiname.id ? '::Edit' : '::NewCinemaZoom' ) | abpLocalization }}</h3>
+    </ng-template>
+    <ng-template #abpBody> 
+        <form [formGroup]="form" (ngSubmit)="save()">
+            <div class="mt-2">
+                <label >cinemaCode</label><span> * </span>
+                <input type="text" class="form-control" formControlName="cinemaCode" autofocus />
+            </div>
+            <div class="mt-2">
+                <label >{{"::cinemaName"|abpLocalization}}</label><span> * </span>
+                <input type="text"  class="form-control" formControlName="cinemaName"  />
+            </div>
+            <div class="mt-2">
+                <label >{{"::rowSeats"|abpLocalization}}</label><span> * </span>
+                <input type="number" (change)="calculateTotal()"  class="form-control" formControlName="rowSeats"  />
+            </div>
+            <div class="mt-2">
+                <label >{{"::columnSeats"|abpLocalization}}</label><span> * </span>
+                <input type="number" (change)="calculateTotal()"  class="form-control" formControlName="columnSeats"  />
+            </div>
+            <div class="mt-2">
+                <label >{{"::numberSeat"|abpLocalization}}</label><span> * </span>
+                <input type="number" readonly class="form-control" formControlName="numberSeats"  />
+            </div>
+            <div class="mt-2">
+                <label for="book-type">status</label><span> * </span>
+                <select class="form-control"  formControlName="status">
+                    <option [ngValue]="null">Select Status </option>
+                    <option [ngValue]="status.value" *ngFor="let status of statusOption"> 
+                        {{ '::Enum:Status.' + status.value | abpLocalization }}
+                    </option>
+                </select>
+            </div>
+        </form>
+    </ng-template>
+
+    <ng-template #abpFooter>
+        <button type="button" class="btn btn-secondary" abpClose>
+            {{ '::Close' | abpLocalization }}
+        </button>
+        <button class="btn btn-primary" (click)="save()" [disabled]="form.invalid">
+            <i class="fa fa-check mr-1"></i>
+            {{ '::Save' | abpLocalization }}
+        </button>
+    </ng-template>
+</abp-modal>

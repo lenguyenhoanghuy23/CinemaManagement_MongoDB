@@ -1,0 +1,91 @@
+<div class="card" style="height: 850px;">
+    <div class="card-body " >
+        <div class="row g-3">
+            <div class=" col-md-4">
+                <nz-date-picker nzInline [(ngModel)]="date" (ngModelChange)="onChange($event)"></nz-date-picker>
+            </div>
+            <div class=" col-md-8" *ngIf=" seller.totalCount > 0  ; else elseBlock" >
+                <div class="row row-cols-1 row-cols-md-4 g-4">
+                    <div class="col" *ngFor="let item of seller.items" >
+                        <div class="card h-100"  (dblclick)="openModalBuyTIcket(item.showTimeCode , item.movie , item.movieAvata, content)">
+                        <img src="https://localhost:44333/{{item.movieAvata}}" class="card-img-top" alt="...">
+                        <div class="card-body">
+                            <h5 class="card-title">{{item.showTimeCode}}</h5>
+                            <p class="card-text"> {{item.movieName}}</p>
+                            <p class="card-text"> {{item.movieSchedule |date:'dd/MM/yyyy'  }} <nz-tag [nzColor]="'purple'">{{item.movieSchedule |date:'hh:mm a'  }}</nz-tag> </p>
+                        </div>
+                        <div class="card-footer">
+                            <small class="text-muted">Last updated 3 mins ago</small>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #elseBlock>
+            <div class=" col-md-8">
+                <nz-result nzStatus="info" >
+                    <div nz-result-extra>
+                        <h3>chưa có lịch chiếu nào được tạo vé hôm nay</h3>
+                    </div>
+                </nz-result>
+            </div>
+        </ng-template>
+
+    </div>
+</div>
+
+<ng-template #content let-modal  >
+	<div class="modal-header dark-modal">
+		<h4 class="modal-title">Đặt vé</h4>
+		<button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+	</div>
+	<div class="modal-body dark-modal ">
+        <div nz-row>
+            <div nz-col nzSpan="12" nzOffset="6"  class="text-center"><h3 class="Screen">Màn Hình</h3></div>
+        </div>
+		<div nz-row>
+
+            <div nz-col nzSpan="2" nzOffset ="0" >
+                <button type="button" class="btn btn-light" style="margin-top: 150px;">đã đặt</button>
+                <br>
+                <button type="button" class="btn btn-danger">đang chọn</button>
+                <br>
+                <button type="button" class="btn btn-outline-danger">vip</button>
+                <br>
+                <button type="button" class="btn btn-outline-danger">thường</button>
+            </div>
+            <div nz-col  nzOffset="6" class="Screen-display text-center"  >
+                    <div *ngFor="let row of rows"  style="margin:10px 10px 10px 10px">
+                        <ng-container *ngFor="let item of row.items" >
+
+                            <button
+                                type="button"
+                                [class.btn-light]="item.status === 1"
+                                [class.btn-outline-secondary]="item.status !== 1"
+                                [disabled]="item.status === 1"
+                                class="btn btn-outline-secondary" (click)="infoTicketSeate(row.showTimeCode ,  item.item , row.priceticker ,$event)"> {{ item.item }} </button>
+                        </ng-container>
+                    </div>
+            </div>
+        </div>
+	</div>
+    <div class="footer d-flex bd-highlight dark-modal" style=" height: 150px;" >
+        <div class="p-2 flex-grow-1 bd-highlight">
+            <p style="margin-bottom: 10px;">Ghế đã chọn:</p>
+            <div>
+                <nz-tag [nzColor]="'magenta'" *ngFor="let item of tempo"> {{item.seatsCode}}</nz-tag>
+            </div>
+            <p style="margin: 10px 0px;"  >Thành tiền: {{totalAmount| currency:"1.0-0": "VND:"}}</p>
+        </div>
+        
+        <div class="p-2 bd-highlight ">
+            <img  src="https://localhost:44333/{{movieAvate}}" style="width: 95px; max-height: auto;" alt="">
+        </div>
+        <div class="mt-auto p-2 bd-highlight">
+            <button type="button" class="btn btn-danger" (click)="OrderTicket()" >đặt vé </button> 
+        </div>
+    </div>
+	
+</ng-template>

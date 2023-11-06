@@ -1,0 +1,201 @@
+
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col col-md-6">
+                <h5 class="card-title">
+                    {{ '::Movie' | abpLocalization }}
+                </h5>
+            </div>
+            <div class="text-end col col-md-6"></div>
+            <div class="text-lg-end pt-2">
+                <button *abpPermission="'CinemaManagement.Movies.Create'" id="create" class="btn btn-primary" type="button" (click)="showModal()">
+                    <i class="fa fa-plus me-1"></i>
+                    <span>{{"::New Movie" | abpLocalization}}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row row-cols-1 row-cols-md-5 g-4" >
+            <div class="col" *ngFor="let mov of movie.items ; let i=index;">
+                <div class="card h-100">
+                    <img src="https://localhost:44333/{{mov.avata}}" style="height: 350px;" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">{{mov.movieName}}</h5>
+                            <p class="card-text text-truncate" >
+                            {{mov.description}}
+                            </p>
+                        <h6>{{"::runningTime" |abpLocalization}}: {{mov.runningTime|number}} phút</h6>
+                        <h6>{{"::releaseDate" |abpLocalization}}: {{mov.releaseDate|date}}</h6>
+                        <h6>{{"::endDate" |abpLocalization}}: {{mov.endDate | date}}</h6>
+                    </div>
+                        
+                    <div class="card-footer">
+                        <div class="row">
+                            <div class="col col-md-4">
+                                <button  type="button" class="btn btn-info btn-sm" (click)="detail(mov.movieCode , DetailMovie)">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                            </div>
+                            <div class="col col-md-4">
+                                <button *abpPermission="'CinemaManagement.Movies.Edit'" type="button" class="btn btn-primary btn-sm" (click)="editMovie(mov.movieCode)">
+                                    <i class="fas fa-highlighter"></i>
+                                </button>
+                            </div>
+                            <div class="col col-md-4">
+                                <button *abpPermission="'CinemaManagement.Movies.Delete'" type="button" class="btn btn-danger btn-sm" (click)="DeleteMovie(mov.movieCode)">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer">
+        <div class="float-sm-end">
+                <ngb-pagination
+                    [collectionSize]="movie.totalCount"
+                    [maxSize]="5"
+                    [page]="list.page"
+                    [rotate]="true"
+                    [pageSize]="list.maxResultCount"
+                    [boundaryLinks]="true"
+                    (pageChange)="loadPage($event)"
+                ></ngb-pagination>
+        </div>
+    </div>
+
+</div>
+
+
+<nz-modal
+    [(nzVisible)]="isVisible"
+    nzTitle="Create"
+    nzOkText="Ok"
+    nzCancelText="Cancel"
+    (nzOnOk)="save()"
+    (nzOnCancel)="handleCancel()"
+    nzWidth="1300px"
+>
+    <ng-container *nzModalContent>
+        <div class="container">
+            <form [formGroup]="form"  class="row">
+                <div class="col-9">
+                    <div class="row g-3"  >
+                        <div class="form-floating col-md-6">
+                            <input type="text" class="form-control" formControlName="movieCode" id="floatingInput" placeholder="movieCode" autofocus>
+                            <label for="floatingInput">movieCode</label>
+                        </div>
+                        <div class="form-floating col-md-6">
+                            <input type="text" class="form-control" formControlName="movieName" id="floatingInput"  placeholder="movieName">
+                            <label for="floatingInput">movieName</label>
+                        </div>
+                        <div class="form-floating col-md-12">
+                            <textarea  class="form-control" formControlName="description" id="floatingInput"  placeholder="description" style="height: 100px"> </textarea>
+                            <label for="floatingInput">description</label>
+                        </div>
+                        <div class="col-md-6">
+                            <nz-select
+                                nzMode="multiple"
+                                nzPlaceHolder="Please select genre"
+                                formControlName="genres"
+                                [nzOptions]="listOfOptionGenre"
+                            ></nz-select>
+                        </div>
+                        <div class="col-md-6">
+                            <nz-select
+                                nzMode="multiple"
+                                nzPlaceHolder="Please select countrie"
+                                formControlName="countries"
+                                [nzOptions]="listOfOptionCountrie"
+                            ></nz-select>
+                        </div>
+                        <div  class="col-md-8">
+                            <nz-range-picker formControlName="TemporaryDate"  ></nz-range-picker>
+                        </div>
+                        <div  class="col-md-4">
+                            <nz-date-picker nzMode="year" formControlName="year" ></nz-date-picker>
+                        </div>
+                        <div class="form-floating col-md-4">
+                            <input type="text" class="form-control" formControlName="producer" id="floatingInput"  placeholder="producer">
+                            <label for="floatingInput">producer</label>
+                        </div>
+                        <div class="form-floating col-md-4">
+                            <input type="text" class="form-control" formControlName="actor" id="floatingInput"  placeholder="actor">
+                            <label for="floatingInput">actor</label>
+                        </div>
+                        <div class="form-floating col-md-4">
+                            <input type="text" class="form-control" formControlName="director" id="floatingInput"  placeholder="director">
+                            <label for="floatingInput">director</label>
+                        </div>
+                        <div class="form-floating col-md-4">
+                            <input type="number" class="form-control" formControlName="runningTime" id="floatingInput"  placeholder="runningTime">
+                            <label for="floatingInput">runningTime</label>
+                        </div>
+                        <div class="form-floating col-md-4" >
+                            <input type="file" class="file-input"
+                                accept=" .png, .jpg, .jpeg ,.gif"
+                                (change)="onFileSelectedImg($event)" #fileUpload>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-3">
+                    <div class="preview-container form-floating col-md-4" >
+                        <img [src]="imageUrl" 
+                            [nzFallback]="fallback" 
+                            nzSrc="error" 
+                            alt="Xem trước hình ảnh" 
+                            class="preview-image" 
+
+                        >
+                    </div>
+                    <br>
+                    <div class="float-center col-md-4">
+                        <button type="button" class="btn btn-danger btn-sm" (click)="clearImg()">
+                            <i class="fas fa-trash-alt"></i>
+                        </button>
+                    </div>
+                    
+                </div>
+            </form>
+        </div>
+    </ng-container>
+</nz-modal>
+
+
+<ng-template #DetailMovie let-modal>
+    <div class="modal-header"></div>
+    <div class="card mb-3 modal-body"  >
+        <div class="row g-0" >
+            <div class="col-md-4">
+                <img
+                    src="https://localhost:44333/{{selectedMovie.avata}}"
+                    style="height: 400px; width: 300px;"
+                    alt="Trendy Pants and Shoes"
+                    class="img-fluid rounded-start"
+                />
+            </div>
+            <div class="col-md-8">
+                <div class="card-body" >
+                    <h5 class="card-title">{{"::movieCode" | abpLocalization }}: {{selectedMovie.movieCode}}</h5>
+                    <h5 class="card-title">{{"::movieName" | abpLocalization }}:{{selectedMovie.movieName}}</h5>
+                    <h5 class="card-text">{{"::description" |abpLocalization}}:{{selectedMovie.description}}</h5>
+                    <h6 class="card-text">{{"::runningTime" |abpLocalization}}:{{selectedMovie.runningTime}} phút</h6>
+                    <h6 class="card-text">{{"::releaseDate" |abpLocalization}}:{{selectedMovie.releaseDate|date:'dd/MM/yyyy' }}</h6>
+                    <h6 class="card-text">{{"::endDate" |abpLocalization}}  {{selectedMovie.endDate|date | date:'dd/MM/yyyy'}}</h6>
+                    <h6 class="card-text">{{"::year" |abpLocalization}}: {{selectedMovie.year}}</h6>
+                    <h6 class="card-text">{{"::producer" |abpLocalization}}: {{selectedMovie.producer}}</h6>
+                    <h6 class="card-text">{{"::actor" |abpLocalization}}: {{selectedMovie.actor}}</h6>
+                    <h6 class="card-text">{{"::director" |abpLocalization}}:{{selectedMovie.director}}</h6>
+                    <h6 class="card-text">{{"::genre" |abpLocalization}}:{{selectedMovie.genreName}}</h6>
+                    <h6 class="card-text">{{"::countrie" |abpLocalization}}:{{selectedMovie.countrieName}}</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer"></div>
+</ng-template>

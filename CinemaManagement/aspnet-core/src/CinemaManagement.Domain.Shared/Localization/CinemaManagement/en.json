@@ -1,0 +1,66 @@
+{
+  "culture": "en",
+  "texts": {
+    "Menu:Home": "Home",
+    "Welcome": "Welcome",
+    "LongWelcomeMessage": "Welcome to the application. This is a startup project based on the ABP framework. For more information, visit abp.io.",
+
+    "Enum:Status.0": "Active",
+    "Enum:Status.1": "InActive",
+
+
+    "Enum:StatusShowTime.0": "not created yet",
+    "Enum:StatusShowTime.1": "created",
+    "runningTime": "Thời lượng",
+
+
+    // localization
+    // screentype
+    "Permission:CinemaManagement": "Cinema Managerment",
+
+    "Permission:ScreenTypes": "ScreenTypes Management",
+    "Permission:ScreenTypes.Create": "Creating new screen type",
+    "Permission:ScreenTypes.Edit": "Editing the screen type",
+    "Permission:ScreenTypes.Delete": "Deleting thì screen type",
+
+
+    "Permission:Genres": "Genres Management",
+    "Permission:Genres.Create": "Creating new Genres",
+    "Permission:Genres.Edit": "Editing the Genres",
+    "Permission:Genres.Delete": "Deleting the Genres",
+
+
+    "Permission:Countries": "Countries Management",
+    "Permission:Countries.Create": "Creating new Countries",
+    "Permission:Countries.Edit": "Editing the Countries",
+    "Permission:Countries.Delete": "Deleting thì Countries",
+
+
+    "Permission:Movies": "Movies Management",
+    "Permission:Movies.Create": "Creating new Movies",
+    "Permission:Movies.Edit": "Editing the Movies",
+    "Permission:Movies.Delete": "Deleting thì Movies",
+
+
+    "Permission:Tickets": "Tickets Management",
+    "Permission:Tickets.Create": "Creating new Tickets",
+    "Permission:Tickets.Edit": "Editing the Tickets",
+    "Permission:Tickets.Delete": "Deleting thì Tickets",
+
+
+    "Permission:CinemaZooms": "CinemaZooms Management",
+    "Permission:CinemaZooms.Create": "Creating new CinemaZooms",
+    "Permission:CinemaZooms.Edit": "Editing the CinemaZooms",
+    "Permission:CinemaZooms.Delete": "Deleting thì CinemaZooms",
+
+
+    "Permission:ShowTimes": "ShowTimes Management",
+    "Permission:ShowTimes.Create": "Creating new ShowTimes",
+    "Permission:ShowTimes.Edit": "Editing the ShowTimes",
+    "Permission:ShowTimes.Delete": "Deleting thì ShowTimes"
+
+
+
+
+  }
+}

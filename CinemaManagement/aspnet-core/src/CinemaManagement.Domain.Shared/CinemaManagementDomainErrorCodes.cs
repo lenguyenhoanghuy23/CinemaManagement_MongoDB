@@ -1,0 +1,6 @@
+﻿namespace CinemaManagement;
+
+public static class CinemaManagementDomainErrorCodes
+{
+    /* You can add your business exception error codes here, as constants */
+}

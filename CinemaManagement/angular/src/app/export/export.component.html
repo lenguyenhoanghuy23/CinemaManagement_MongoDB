@@ -1,0 +1,41 @@
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col col-md-6">
+                <h5 class="card-title">
+                    {{ '::Export' | abpLocalization }}
+                </h5>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="row">
+            <div class="col-sm-5">
+                <nz-transfer
+                    [nzListStyle]="{ 'width.px': 300, 'height.px': 500 }"
+                    [nzDataSource]="list"
+                    [nzTitles]="['Source', 'Target']"
+                    nzShowSearch
+                    [nzOperations]="['to right', 'to left']"
+                    [nzShowSelectAll]="false"
+                    [nzFooter]="footer"
+                    (nzSelectChange)="select($event)"
+                    (nzChange)="change($event)"
+                >
+                    <ng-template #footer let-direction>
+                        <button nz-button (click)="reload(direction)" [nzSize]="'small'" style="float: right; margin: 5px;">
+                        reload
+                        </button>
+                    </ng-template>
+                </nz-transfer>
+            </div>
+            
+            <div class="col-sm-4 align-self-end">
+
+                <button type="button" class="btn btn-success float-start" (click)="export()" *abpPermission="'CinemaManagement.DataManagement.Create'" >Export</button>
+            </div>
+        
+        </div>
+    </div>
+</div>
+

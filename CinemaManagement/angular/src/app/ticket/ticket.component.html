@@ -1,0 +1,65 @@
+<div class="card">
+    <div class="card-body " >
+        <div class="row g-3">
+            <div class=" col-md-6">
+                <cdk-virtual-scroll-viewport [itemSize]="73" [style.height.px]="800" class="demo-infinite-container">
+                    <nz-list nzItemLayout="vertical" nzSize="large" >
+                      <nz-list-item *ngFor="let item of showtime.items">
+                        <nz-list-item-meta>
+                            <nz-list-item-meta-title>
+                                <h5>{{item.showTimeCode}}</h5> 
+                                <p>{{item.movieName}}</p>
+                                <p>{{item.movieSchedule | date:'hh:mm a '+'dd/MM/yyyy' }}</p>
+                                <div *ngIf="item.status == 0" >
+                                    <nz-tag [nzColor]="'magenta'">{{'::Enum:StatusShowTime.' + item.status | abpLocalization }}</nz-tag>
+                                </div>
+                                <div *ngIf="item.status == 1" >
+                                    <nz-tag [nzColor]="'cyan'">{{'::Enum:StatusShowTime.' + item.status | abpLocalization }}</nz-tag>
+                                </div>
+                    
+                            </nz-list-item-meta-title>
+                        </nz-list-item-meta>
+                            <nz-list-item-extra>
+                                <img width="150" (click)="ShowDetailTickWithShowitme(item.showTimeCode)" height="150" alt="logo" src="https://localhost:44333/{{item.movieAvata}}" />
+                                <ul nz-list-item-actions>
+                                    <nz-list-item-action>
+                                        <button *abpPermission="'CinemaManagement.Tickets.Create'" type="button" class="btn btn-outline-info btn-sm" (click)="createTicket(item.showTimeCode)" >
+                                            <i class="fas fa-plus-circle"></i>
+                                        </button>
+                                    </nz-list-item-action>
+                                    <nz-list-item-action>
+                                        <button *abpPermission="'CinemaManagement.Tickets.Delete'" type="button" class="btn btn-outline-danger btn-sm" (click)="deleteTicket(item.showTimeCode)"> 
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </nz-list-item-action>
+                                </ul>
+                            </nz-list-item-extra>
+                        </nz-list-item>
+                    </nz-list>
+                </cdk-virtual-scroll-viewport>
+            </div>
+            <div class=" col-md-6">
+                <nz-table #headerTable  [nzData]="ticket.items" nzFooter="tổng số vé: {{ticket.totalCount}}" [nzPageSize]="50" nzShowPagination="false" [nzScroll]="{ y: '700px' }">
+                    <thead>
+                        <tr>
+                            <th>showtime</th>
+                            <th nzWidth="100px">seatcode</th>
+                            <th>status</th>
+                            <th>priceticker</th>
+                            <th>typeticker</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let data of headerTable.data">
+                        <td>{{ data.showtime }}</td>
+                        <td>{{ data.seatcode }}</td>
+                        <td>{{ data.status }}</td>
+                        <td>{{ data.priceticker }}</td>
+                        <td>{{ data.typeticker }}</td>
+                        </tr>
+                    </tbody>
+                </nz-table>
+            </div>
+        </div>
+    </div>
+</div>

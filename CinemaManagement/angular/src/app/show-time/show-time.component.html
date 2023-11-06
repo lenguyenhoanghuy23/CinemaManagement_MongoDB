@@ -1,0 +1,132 @@
+<div class="card">
+    <div class="card-header">
+        <div class="row">
+            <div class="col col-md-6">
+            <h5 class="card-title">
+                {{ '::ShowTime' | abpLocalization }}
+            </h5>
+            </div>
+            <div class="text-end col col-md-6"></div>
+            <div class="text-lg-end pt-2">
+                <button *abpPermission="'CinemaManagement.ShowTimes.Create'" id="create" class="btn btn-primary" type="button" (click)="showModal()">
+                    <i class="fa fa-plus me-1"></i>
+                    <span>{{"::NewShowtime" | abpLocalization}}</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+            <ngx-datatable [rows]="showtime.items" [count]="showtime.totalCount" [list]="list" default>
+                <ngx-datatable-column
+                    [name]="'::Actions' | abpLocalization"
+                    [maxWidth]="150"
+                    [sortable]="false"
+                >
+                    <ng-template let-row="row" ngx-datatable-cell-template="">
+                        <div ngbDropdown  container="body" class="d-inline-block">
+                            <button 
+                                    class="btn btn-primary btn-sm dropdown-toggle"
+                                    data-toggle="dropdown"
+                                    aria-haspopup="true"
+                                    ngbDropdownToggle
+                                >
+                                <i class="fa fa-cog me-1"></i>{{ '::Actions' | abpLocalization }}
+                            </button>
+                        <div ngbDropdownMenu> 
+                            <button *abpPermission="'CinemaManagement.ShowTimes.Edit'" ngbDropdownItem (click)="editShowtime(row.showTimeCode)">
+                                {{ '::Edit' | abpLocalization }}
+                            </button>
+                            <button *abpPermission="'CinemaManagement.ShowTimes.Delete'" ngbDropdownItem (click)="deleteShowtime(row.showTimeCode)">
+                                {{'::delete' | abpLocalization}}
+                            </button>
+                        </div>
+                    </div>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [name]="'::showTimeCode' | abpLocalization" prop="showTimeCode"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'::movieSchedule' | abpLocalization" prop="movieSchedule">
+                <ng-template let-row="row" ngx-datatable-cell-template >
+                    {{ row.movieSchedule | date:'hh:mm a '+'dd/MM/yyyy'   }}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [name]="'::price' | abpLocalization" prop="price">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.price | currency:'VND':'symbol':'1.0-0'  }}
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [name]="'::status' | abpLocalization" prop="status" >
+                <ng-template let-row="row" ngx-datatable-cell-template  >
+                    <div *ngIf="row.status == 0 ; else elseBlock">
+                        <nz-tag [nzColor]="'magenta'">  {{ '::Enum:StatusShowTime.' + row.status | abpLocalization }}</nz-tag>
+                    </div>
+                    <ng-template #elseBlock>
+                        <nz-tag [nzColor]="'cyan'">{{ '::Enum:StatusShowTime.' + row.status | abpLocalization }}</nz-tag>
+                    </ng-template>
+                </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [name]="'::movie' | abpLocalization" prop="movie"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'::screenType' | abpLocalization" prop="screenType"></ngx-datatable-column>
+            <ngx-datatable-column [name]="'::cinemaZoom' | abpLocalization" prop="cinemaZoom"></ngx-datatable-column>
+        </ngx-datatable>
+    </div>
+</div>
+
+
+<div class="card">
+    <nz-modal
+        [(nzVisible)]="isVisible"
+        nzTitle="Create"
+        nzOkText="Ok"
+        nzCancelText="Cancel"
+        (nzOnOk)="save()"
+        (nzOnCancel)="handleCancel()"
+        nzWidth="900px"
+    >
+        <ng-container *nzModalContent>
+            <form [formGroup]="form" class="row g-3" >
+                
+                <div class="form-floating col-md-6">
+                    <input type="text" class="form-control" formControlName="showTimeCode" id="floatingInput" placeholder="showTimeCode" autofocus>
+                    <label for="floatingInput">showTimeCode</label>
+                </div>
+                <div class="form-floating col-md-6">
+                    <input type="number" class="form-control" formControlName="price" id="floatingInput"  placeholder="price">
+                    <label for="floatingInput">price</label>
+                </div>
+                
+                <div class="form-floating col-md-6">
+                    <nz-date-picker
+                        nzFormat="yyyy-MM-dd HH:mm:ss"
+                        formControlName="movieSchedule"
+                        [nzShowTime] ="true"
+                    
+                    ></nz-date-picker>
+                </div>
+                <div class="form-floating col-md-6">
+                    <nz-select
+                        nzPlaceHolder="Please select movie"
+                        formControlName="movie"
+                        [nzOptions]="listOfOptionMovie"
+                        [nzAllowClear] = "true"
+                    ></nz-select>
+                </div>
+                <div class="form-floating col-md-6">
+                    <nz-select
+                        nzPlaceHolder="Please select countrie"
+                        formControlName="cinemaZoom"
+                        [nzOptions]="listOfOptionCinema"
+                        [nzAllowClear] = "true"
+                    ></nz-select>
+                </div>
+                <div class="form-floating col-md-6">
+                    <nz-select
+                        nzPlaceHolder="Please select countrie"
+                        formControlName="screenType"
+                        [nzOptions]="listOfOptionScreen"
+                        [nzAllowClear] = "true"
+                    ></nz-select>
+                </div>
+            </form>
+        </ng-container>
+    </nz-modal>
+</div>
